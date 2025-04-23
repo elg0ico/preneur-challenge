@@ -31,92 +31,13 @@
   </script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js"></script>
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <style>
-    [x-cloak] { display: none !important; }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    @keyframes slideIn {
-      from { 
-        opacity: 0;
-        transform: translateX(-100px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes heartBeat {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
-    }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-    
-    .animate-slide-in {
-      animation: slideIn 0.5s ease-out;
-    }
-
-    .animate-heart-beat {
-      animation: heartBeat 0.3s ease-in-out;
-    }
-    
-    .thread-highlight {
-      transition: background-color 0s;
-    }
-
-    .thread-content {
-      opacity: 0;
-      transform: translateX(-100px);
-      transition: all 0.5s ease-out;
-    }
-
-    .thread-content.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .heart-icon {
-      transition: all 0.2s ease-in-out;
-    }
-
-    .heart-icon.liked {
-      transform: scale(1);
-    }
-
-    body {
-      background-color: #000000;
-    }
-
-    #particles-js {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    .content-wrapper {
-      position: relative;
-      z-index: 1;
-    }
-  </style>
+  <link rel="stylesheet" href="main.css">
 </head>
 <body class="min-h-screen py-8 px-4">
   <div id="particles-js"></div>
 
   <div class="content-wrapper">
     <div x-data="threadsApp()" x-init="initThreads()" class="max-w-lg mx-auto bg-dark-900 shadow-xl rounded-3xl overflow-hidden relative">
-      
-      
       <div class="sticky top-0 bg-dark-900 border-b border-dark-700 z-10">
         <div class="px-4 py-4 flex items-center justify-between">
           <h1 class="text-xl font-bold text-gray-100">Threads</h1>
@@ -130,7 +51,6 @@
           </div>
         </div>
       </div>
-      
       
       <div class="pb-20">
         <template x-if="threads.length === 0">
@@ -210,7 +130,6 @@
         </template>
       </div>
       
-      
       <div class="fixed bottom-6 right-6 z-10">
         <button 
           @click="openNewThreadModal($event)"
@@ -221,7 +140,6 @@
           </svg>
         </button>
       </div>
-      
       
       <div 
         x-cloak 
@@ -234,10 +152,10 @@
         x-transition:leave-end="opacity-0"
         class="fixed inset-0 z-30 overflow-y-auto" 
         aria-labelledby="modal-title" 
-        x-ref="dialog" 
+        x-ref="dialog"
+        @keydown.escape="closeModal"
         aria-modal="true"
         role="dialog">
-        
         
         <div 
           x-show="isModalOpen"
@@ -249,7 +167,6 @@
           x-transition:leave-end="opacity-0"
           class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"
           aria-hidden="true"></div>
-        
         
         <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
           <div 
@@ -263,7 +180,6 @@
             class="relative bg-dark-900 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6"
             x-ref="modalContent">
             
-            
             <div class="flex items-center justify-between pb-3 border-b border-dark-700">
               <h3 class="text-lg font-medium text-gray-100" id="modal-title">New Thread</h3>
               <button 
@@ -275,7 +191,6 @@
                 </svg>
               </button>
             </div>
-            
             
             <div class="mt-4">
               <textarea 
@@ -294,7 +209,6 @@
                 <span x-show="!isThreadContentValid" class="text-red-400 ml-2">(Content is required and must not exceed maximum length)</span>
               </div>
             </div>
-            
             
             <div class="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
               <button 
@@ -315,7 +229,6 @@
           </div>
         </div>
       </div>
-      
       
       <div 
         x-cloak 
@@ -362,333 +275,6 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('alpine:init', () => {
-      window.threadsApp = function() {
-        return {
-          
-          isModalOpen: false,
-          newThreadContent: '',
-          showToast: false,
-          toastMessage: '',
-          toastType: 'success',
-          maxThreadLength: 280,
-          threads: [
-            {
-              id: 3,
-              author: 'Alice Johnson',
-              content: 'Just finished reading an amazing book about AI ethics. So many thought-provoking ideas about our digital future!',
-              timestamp: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
-              likes: 24,
-              comments: 8,
-              liked: false,
-              isNew: false
-            },
-            {
-              id: 2,
-              author: 'Sam Rodriguez',
-              content: 'Working on a new music project. Can\'t wait to share it with everyone soon. Stay tuned!',
-              timestamp: new Date(new Date().getTime() - 12 * 60 * 60 * 1000),
-              likes: 87,
-              comments: 15,
-              liked: true,
-              isNew: false
-            },
-            {
-              id: 1,
-              author: 'Taylor Chen',
-              content: 'Beautiful day for hiking! The trails are gorgeous this time of year. 🌲🏞️',
-              timestamp: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-              likes: 132,
-              comments: 24,
-              liked: false,
-              isNew: false
-            }
-          ],
-
-          
-          get threadCount() {
-            return this.threads.length;
-          },
-
-          get isThreadContentValid() {
-            return this.newThreadContent.trim().length > 0 && 
-                   this.newThreadContent.length <= this.maxThreadLength;
-          },
-
-          
-          formatTime(timestamp) {
-            const now = new Date();
-            const diff = Math.floor((now - timestamp) / 1000);
-            
-            if (diff < 60) {
-              return 'Just now';
-            } else if (diff < 3600) {
-              const minutes = Math.floor(diff / 60);
-              return `${minutes}m ago`;
-            } else if (diff < 86400) {
-              const hours = Math.floor(diff / 3600);
-              return `${hours}h ago`;
-            } else {
-              return timestamp.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            }
-          },
-          
-          getAvatarColor(author) {
-            const colors = [
-              'from-pink-500 to-red-500',
-              'from-purple-500 to-indigo-500',
-              'from-green-500 to-teal-500',
-              'from-blue-500 to-cyan-500',
-              'from-yellow-500 to-orange-500'
-            ];
-            
-            let hash = 0;
-            for (let i = 0; i < author.length; i++) {
-              hash = author.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            
-            return colors[Math.abs(hash) % colors.length];
-          },
-          
-          likeThread(thread, event) {
-            
-            const heartIcon = event.currentTarget.querySelector('.heart-icon');
-            if (heartIcon) {
-              heartIcon.classList.add('animate-heart-beat');
-              setTimeout(() => {
-                heartIcon.classList.remove('animate-heart-beat');
-              }, 300);
-            }
-
-            if (thread.liked) {
-              thread.likes--;
-              thread.liked = false;
-            } else {
-              thread.likes++;
-              thread.liked = true;
-            }
-          },
-          
-          openNewThreadModal(event) {
-            this.isModalOpen = true;
-            this.newThreadContent = '';
-            
-            
-            this.$nextTick(() => {
-              if (this.$refs.threadContent) {
-                this.$refs.threadContent.focus();
-              }
-            });
-          },
-          
-          closeModal() {
-            this.isModalOpen = false;
-            this.newThreadContent = '';
-          },
-          
-          showSuccessToast(message = 'Thread posted successfully!') {
-            this.toastMessage = message;
-            this.toastType = 'success';
-            this.showToast = true;
-            setTimeout(() => {
-              this.showToast = false;
-            }, 2000);
-          },
-          
-          showErrorToast(message) {
-            this.toastMessage = message;
-            this.toastType = 'error';
-            this.showToast = true;
-            setTimeout(() => {
-              this.showToast = false;
-            }, 3000);
-          },
-          
-          postNewThread() {
-            if (!this.isThreadContentValid) {
-              if (this.newThreadContent.length > this.maxThreadLength) {
-                this.showErrorToast('Thread content exceeds maximum length');
-              } else {
-                this.showErrorToast('Thread content cannot be empty');
-              }
-              return;
-            }
-            
-            try {
-              
-              const newThread = {
-                id: Date.now(),
-                author: 'You',
-                content: this.newThreadContent.trim(),
-                timestamp: new Date(),
-                likes: 0,
-                comments: 0,
-                liked: false,
-                isNew: true
-              };
-              
-              
-              this.closeModal();
-              
-              
-              this.showSuccessToast();
-              
-              
-              this.threads.unshift(newThread);
-              
-              
-              this.$nextTick(() => {
-                const threadElement = document.getElementById(`thread-${newThread.id}`);
-                if (threadElement) {
-                  threadElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  
-                  const contentElement = threadElement.querySelector('.thread-content');
-                  if (contentElement) {
-                    setTimeout(() => {
-                      contentElement.classList.add('visible');
-                    }, 100);
-                  }
-                }
-              });
-              
-              
-              setTimeout(() => {
-                newThread.isNew = false;
-              }, 3000);
-            } catch (error) {
-              console.error('Error posting thread:', error);
-              this.showErrorToast('Failed to post thread. Please try again.');
-            }
-          },
-
-          
-          initThreads() {
-            this.$nextTick(() => {
-              const threadElements = document.querySelectorAll('.thread-content');
-              threadElements.forEach((element, index) => {
-                setTimeout(() => {
-                  element.classList.add('visible');
-                }, index * 100);
-              });
-            });
-          }
-        };
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-      particlesJS('particles-js', {
-  "particles": {
-    "number": {
-      "value": 160,
-      "density": {
-        "enable": true,
-        "value_area": 800
-      }
-    },
-    "color": {
-      "value": "#ffffff"
-    },
-    "shape": {
-      "type": "circle",
-      "stroke": {
-        "width": 0,
-        "color": "#000000"
-      },
-      "polygon": {
-        "nb_sides": 5
-      },
-      "image": {
-        "src": "img/github.svg",
-        "width": 100,
-        "height": 100
-      }
-    },
-    "opacity": {
-      "value": 1,
-      "random": true,
-      "anim": {
-        "enable": true,
-        "speed": 1,
-        "opacity_min": 0,
-        "sync": false
-      }
-    },
-    "size": {
-      "value": 3,
-      "random": true,
-      "anim": {
-        "enable": false,
-        "speed": 4,
-        "size_min": 0.3,
-        "sync": false
-      }
-    },
-    "line_linked": {
-      "enable": false,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": {
-      "enable": true,
-      "speed": 1,
-      "direction": "none",
-      "random": true,
-      "straight": false,
-      "out_mode": "out",
-      "bounce": false,
-      "attract": {
-        "enable": false,
-        "rotateX": 600,
-        "rotateY": 600
-      }
-    }
-  },
-  "interactivity": {
-    "detect_on": "canvas",
-    "events": {
-      "onhover": {
-        "enable": true,
-        "mode": "bubble"
-      },
-      "onclick": {
-        "enable": true,
-        "mode": "repulse"
-      },
-      "resize": true
-    },
-    "modes": {
-      "grab": {
-        "distance": 400,
-        "line_linked": {
-          "opacity": 1
-        }
-      },
-      "bubble": {
-        "distance": 250,
-        "size": 0,
-        "duration": 2,
-        "opacity": 0,
-        "speed": 3
-      },
-      "repulse": {
-        "distance": 400,
-        "duration": 0.4
-      },
-      "push": {
-        "particles_nb": 4
-      },
-      "remove": {
-        "particles_nb": 2
-      }
-    }
-  },
-  "retina_detect": true
-});
-    });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
