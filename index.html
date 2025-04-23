@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Threads App</title>
-  <!-- Tailwind CSS via CDN (with explicit loading) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -30,14 +29,11 @@
       },
     }
   </script>
-  <!-- Alpine.js -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js"></script>
-  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <style>
     [x-cloak] { display: none !important; }
     
-    /* Custom animations */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -115,14 +111,12 @@
   </style>
 </head>
 <body class="min-h-screen py-8 px-4">
-  <!-- Particles.js container -->
   <div id="particles-js"></div>
 
-  <!-- Content wrapper -->
   <div class="content-wrapper">
     <div x-data="threadsApp()" x-init="initThreads()" class="max-w-lg mx-auto bg-dark-900 shadow-xl rounded-3xl overflow-hidden relative">
       
-      <!-- App Header -->
+      
       <div class="sticky top-0 bg-dark-900 border-b border-dark-700 z-10">
         <div class="px-4 py-4 flex items-center justify-between">
           <h1 class="text-xl font-bold text-gray-100">Threads</h1>
@@ -137,7 +131,7 @@
         </div>
       </div>
       
-      <!-- Main Thread List -->
+      
       <div class="pb-20">
         <template x-if="threads.length === 0">
           <div class="flex flex-col items-center justify-center py-12" role="status" aria-label="No threads available">
@@ -216,7 +210,7 @@
         </template>
       </div>
       
-      <!-- FAB (Floating Action Button) -->
+      
       <div class="fixed bottom-6 right-6 z-10">
         <button 
           @click="openNewThreadModal($event)"
@@ -228,7 +222,7 @@
         </button>
       </div>
       
-      <!-- Thread Creation Modal -->
+      
       <div 
         x-cloak 
         x-show="isModalOpen" 
@@ -244,7 +238,7 @@
         aria-modal="true"
         role="dialog">
         
-        <!-- Modal Backdrop -->
+        
         <div 
           x-show="isModalOpen"
           x-transition:enter="transition ease-out duration-300"
@@ -256,7 +250,7 @@
           class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"
           aria-hidden="true"></div>
         
-        <!-- Modal Content -->
+        
         <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
           <div 
             x-show="isModalOpen" 
@@ -269,7 +263,7 @@
             class="relative bg-dark-900 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6"
             x-ref="modalContent">
             
-            <!-- Modal Header -->
+            
             <div class="flex items-center justify-between pb-3 border-b border-dark-700">
               <h3 class="text-lg font-medium text-gray-100" id="modal-title">New Thread</h3>
               <button 
@@ -282,7 +276,7 @@
               </button>
             </div>
             
-            <!-- Modal Body -->
+            
             <div class="mt-4">
               <textarea 
                 x-ref="threadContent"
@@ -301,7 +295,7 @@
               </div>
             </div>
             
-            <!-- Modal Footer -->
+            
             <div class="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
               <button 
                 @click="postNewThread" 
@@ -322,7 +316,7 @@
         </div>
       </div>
       
-      <!-- Toast Notifications -->
+      
       <div 
         x-cloak 
         x-show="showToast" 
@@ -372,7 +366,7 @@
     document.addEventListener('alpine:init', () => {
       window.threadsApp = function() {
         return {
-          // State management
+          
           isModalOpen: false,
           newThreadContent: '',
           showToast: false,
@@ -412,7 +406,7 @@
             }
           ],
 
-          // Computed properties
+          
           get threadCount() {
             return this.threads.length;
           },
@@ -422,7 +416,7 @@
                    this.newThreadContent.length <= this.maxThreadLength;
           },
 
-          // Methods
+          
           formatTime(timestamp) {
             const now = new Date();
             const diff = Math.floor((now - timestamp) / 1000);
@@ -458,7 +452,7 @@
           },
           
           likeThread(thread, event) {
-            // Heart animation
+            
             const heartIcon = event.currentTarget.querySelector('.heart-icon');
             if (heartIcon) {
               heartIcon.classList.add('animate-heart-beat');
@@ -480,7 +474,7 @@
             this.isModalOpen = true;
             this.newThreadContent = '';
             
-            // Focus the textarea after modal is visible
+            
             this.$nextTick(() => {
               if (this.$refs.threadContent) {
                 this.$refs.threadContent.focus();
@@ -522,7 +516,7 @@
             }
             
             try {
-              // Create new thread object
+              
               const newThread = {
                 id: Date.now(),
                 author: 'You',
@@ -534,21 +528,21 @@
                 isNew: true
               };
               
-              // Close modal with animation
+              
               this.closeModal();
               
-              // Show success toast
+              
               this.showSuccessToast();
               
-              // Add thread to the beginning of the list
+              
               this.threads.unshift(newThread);
               
-              // After a small delay, scroll to the new thread and animate it
+              
               this.$nextTick(() => {
                 const threadElement = document.getElementById(`thread-${newThread.id}`);
                 if (threadElement) {
                   threadElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  // Animate the new thread content
+                  
                   const contentElement = threadElement.querySelector('.thread-content');
                   if (contentElement) {
                     setTimeout(() => {
@@ -558,7 +552,7 @@
                 }
               });
               
-              // Remove highlight after 3 seconds
+              
               setTimeout(() => {
                 newThread.isNew = false;
               }, 3000);
@@ -568,7 +562,7 @@
             }
           },
 
-          // Initialize animations on page load
+          
           initThreads() {
             this.$nextTick(() => {
               const threadElements = document.querySelectorAll('.thread-content');
